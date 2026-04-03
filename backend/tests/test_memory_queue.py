@@ -47,4 +47,5 @@ def test_process_queue_forwards_correction_flag_to_updater() -> None:
         thread_id="thread-1",
         agent_name="lead_agent",
         correction_detected=True,
+        reinforcement_detected=False,
     )
