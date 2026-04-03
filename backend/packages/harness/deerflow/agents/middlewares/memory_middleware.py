@@ -31,18 +31,18 @@ _CORRECTION_PATTERNS = (
 
 _REINFORCEMENT_PATTERNS = (
     re.compile(r"\byes[,.]?\s+(?:exactly|perfect|that(?:'s| is) (?:right|correct|it))\b", re.IGNORECASE),
-    re.compile(r"\bperfect\b", re.IGNORECASE),
+    re.compile(r"\bperfect(?:[.!?]|$)", re.IGNORECASE),
     re.compile(r"\bexactly\s+(?:right|correct)\b", re.IGNORECASE),
     re.compile(r"\bthat(?:'s| is)\s+(?:exactly\s+)?(?:right|correct|what i (?:wanted|needed|meant))\b", re.IGNORECASE),
     re.compile(r"\bkeep\s+(?:doing\s+)?that\b", re.IGNORECASE),
     re.compile(r"\bjust\s+(?:like\s+)?(?:that|this)\b", re.IGNORECASE),
-    re.compile(r"\bthis is (?:great|good|helpful|what i wanted)\b", re.IGNORECASE),
-    re.compile(r"对[，,]?\s*就是这样"),
-    re.compile(r"完全正确"),
-    re.compile(r"很好"),
-    re.compile(r"就是这个意思"),
-    re.compile(r"正是我想要的"),
-    re.compile(r"继续保持"),
+    re.compile(r"\bthis is (?:great|helpful)\b(?:[.!?]|$)", re.IGNORECASE),
+    re.compile(r"\bthis is what i wanted\b(?:[.!?]|$)", re.IGNORECASE),
+    re.compile(r"对[，,]?\s*就是这样(?:[。！？!?.]|$)"),
+    re.compile(r"完全正确(?:[。！？!?.]|$)"),
+    re.compile(r"(?:对[，,]?\s*)?就是这个意思(?:[。！？!?.]|$)"),
+    re.compile(r"正是我想要的(?:[。！？!?.]|$)"),
+    re.compile(r"继续保持(?:[。！？!?.]|$)"),
 )
 
 
@@ -235,7 +235,7 @@ class MemoryMiddleware(AgentMiddleware[MemoryMiddlewareState]):
 
         # Queue the filtered conversation for memory update
         correction_detected = detect_correction(filtered_messages)
-        reinforcement_detected = detect_reinforcement(filtered_messages)
+        reinforcement_detected = not correction_detected and detect_reinforcement(filtered_messages)
         queue = get_memory_queue()
         queue.add(
             thread_id=thread_id,

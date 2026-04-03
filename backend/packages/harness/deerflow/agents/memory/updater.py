@@ -246,7 +246,7 @@ def _fact_content_key(content: Any) -> str | None:
     stripped = content.strip()
     if not stripped:
         return None
-    return stripped.lower()
+    return stripped.casefold()
 
 
 class MemoryUpdater:
